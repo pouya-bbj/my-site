@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>پنل مدیریت | Safe Invest Turkey</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070C16;--panel:#0C1524;--panel2:#101B2E;--line:rgba(201,161,94,.22);--gold:#C9A15E;--gold-l:#E4C580;--ink:#E8ECF2;--muted:#98A2B3;--red:#E5735C;--green:#5CBF8A}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Vazirmatn',system-ui,sans-serif}
+body{background:var(--bg);color:var(--ink);min-height:100vh}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+.hidden{display:none!important}
+/* ===== login ===== */
+#loginWrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(1000px 500px at 80% -10%,rgba(201,161,94,.12),transparent),var(--bg)}
+.login-card{width:380px;max-width:92vw;background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:38px 32px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.login-card img{height:64px;margin-bottom:14px}
+.login-card h1{font-size:19px;font-weight:800;color:#fff}
+.login-card p{color:var(--muted);font-size:12.5px;margin:8px 0 24px}
+.login-card input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:13px 15px;color:var(--ink);font-size:14px;margin-bottom:12px;outline:none;transition:.25s;text-align:center}
+.login-card input:focus{border-color:var(--gold)}
+.login-card .err{color:var(--red);font-size:12px;margin-bottom:10px;min-height:16px}
+.btn-gold{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#221604;border:none;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:800;transition:.25s}
+.btn-gold:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 14px;font-size:12.5px;font-weight:600;transition:.2s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold-l)}
+.btn-red{background:transparent;border:1px solid rgba(229,115,92,.5);color:var(--red);border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700}
+.btn-red:hover{background:rgba(229,115,92,.12)}
+.login-card .btn-gold{width:100%}
+/* ===== shell ===== */
+#app{display:flex;min-height:100vh}
+aside{width:230px;flex:none;background:var(--panel);border-inline-end:1px solid rgba(255,255,255,.06);padding:22px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
+aside .brand{display:flex;align-items:center;gap:10px;padding:4px 10px 18px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:14px}
+aside .brand img{height:40px}
+aside .brand b{font-size:13px;color:var(--gold-l)}
+.nav-it{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;color:var(--muted);font-size:13.5px;font-weight:600;border:none;background:transparent;text-align:start;transition:.2s;width:100%}
+.nav-it:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+.nav-it.on{color:var(--gold-l);background:rgba(201,161,94,.12)}
+.nav-it .dot{width:7px;height:7px;border-radius:50%;background:var(--red);margin-inline-start:auto}
+aside .spacer{flex:1}
+main{flex:1;padding:26px 30px;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.topbar h2{font-size:22px;font-weight:800;color:#fff}
+.topbar .who{color:var(--muted);font-size:12.5px}
+/* cards */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:26px}
+.stat-c{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.stat-c b{display:block;font-size:26px;color:var(--gold-l);font-weight:800}
+.stat-c span{color:var(--muted);font-size:12.5px}
+.panel{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:20px;margin-bottom:22px}
+.panel h3{color:#fff;font-size:15px;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{color:var(--muted);font-weight:600;text-align:start;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px}
+td{padding:10px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+td img{width:64px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.pill{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.pill.sale{background:rgba(92,191,138,.15);color:var(--green)}
+.pill.rent{background:rgba(22,50,79,.6);color:#8FC1E8}
+.pill.unread{background:rgba(229,115,92,.15);color:var(--red)}
+/* modal */
+#modalWrap{position:fixed;inset:0;background:rgba(3,7,14,.8);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:40px 16px}
+.modal{width:980px;max-width:100%;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:26px}
+.modal h3{color:#fff;font-size:17px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.f label{display:block;color:var(--muted);font-size:11.5px;margin-bottom:5px;font-weight:600}
+.f input,.f select,.f textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--ink);font-size:13px;outline:none}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--gold)}
+.f textarea{min-height:80px;resize:vertical;line-height:1.9}
+.langtabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 12px}
+.langtabs button{padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font-size:12px;font-weight:700}
+.langtabs button.on{background:var(--gold);color:#221604;border-color:var(--gold)}
+.chk{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:12.5px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
+.chk input{accent-color:var(--gold)}
+.m-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.toast{position:fixed;bottom:24px;inset-inline-start:24px;background:var(--panel2);border:1px solid var(--gold);color:var(--gold-l);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:700;z-index:200;box-shadow:0 16px 40px rgba(0,0,0,.5)}
+@media(max-width:900px){aside{width:64px}aside .brand b,.nav-it span.lbl{display:none}.stats{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="loginWrap">
+  <div class="login-card">
+    <img src="images/logo-hd.png" alt="Safe Invest Turkey">
+    <h1>پنل مدیریت</h1>
+    <p>ورود مخصوص مدیران Safe Invest Turkey</p>
+    <input id="lgU" placeholder="نام کاربری" autocomplete="username">
+    <input id="lgP" type="password" placeholder="رمز عبور" autocomplete="current-password">
+    <div class="err" id="lgErr"></div>
+    <button class="btn-gold" id="lgBtn">ورود</button>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <aside>
+    <div class="brand"><img src="images/logo-hd.png" alt=""><b>ادمین پنل</b></div>
+    <button class="nav-it on" data-v="dash"><span>📊</span><span class="lbl">داشبورد</span></button>
+    <button class="nav-it" data-v="props"><span>🏢</span><span class="lbl">املاک</span></button>
+    <button class="nav-it" data-v="posts"><span>📰</span><span class="lbl">بلاگ</span></button>
+    <button class="nav-it" data-v="msgs"><span>✉️</span><span class="lbl">پیام‌ها</span><i class="dot hidden" id="msgDot"></i></button>
+    <button class="nav-it" data-v="settings"><span>⚙️</span><span class="lbl">تنظیمات</span></button>
+    <button class="nav-it" data-v="i18n"><span>🌐</span><span class="lbl">ترجمه‌ها</span></button>
+    <div class="spacer"></div>
+    <button class="nav-it" id="viewSite"><span>🔗</span><span class="lbl">مشاهده سایت</span></button>
+    <button class="nav-it" id="logout"><span>🚪</span><span class="lbl">خروج</span></button>
+  </aside>
+  <main>
+    <div class="topbar"><h2 id="viewTitle">داشبورد</h2><span class="who" id="who"></span></div>
+    <div id="view"></div>
+  </main>
+</div>
+
+<div id="modalWrap" class="hidden"><div class="modal" id="modalBox"></div></div>
+<div class="toast hidden" id="toast"></div>
+
+<script>
+const LANGS=['en','fa','ar','ru','zh','uk','pt'];
+const LBL={en:'EN',fa:'فا',ar:'AR',ru:'RU',zh:'ZH',uk:'UK',pt:'PT'};
+let TOKEN='';try{TOKEN=localStorage.getItem('adm_token')||''}catch(e){}
+let PROPS=[],POSTS=[],MSGS=[],SET={},curView='dash';
+async function api(p,method,body){
+  const r=await fetch(p,{method:method||'GET',headers:{'Content-Type':'application/json','X-Token':TOKEN},body:body?JSON.stringify(body):undefined});
+  return r.json();
+}
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),2600);}
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ===== auth ===== */
+document.getElementById('lgBtn').onclick=async()=>{
+  document.getElementById('lgErr').textContent='';
+  let r;
+  try{ r=await api('/api/login','POST',{username:document.getElementById('lgU').value,password:document.getElementById('lgP').value}); }
+  catch(e){ document.getElementById('lgErr').textContent='اتصال برقرار نشد — سرور در دسترس نیست'; return; }
+  if(r.ok){TOKEN=r.token;try{localStorage.setItem('adm_token',TOKEN)}catch(e){}boot();}
+  else document.getElementById('lgErr').textContent='نام کاربری یا رمز عبور اشتباه است';
+};
+lgP.addEventListener('keydown',e=>{if(e.key==='Enter')lgBtn.click()});
+document.getElementById('logout').onclick=async()=>{await api('/api/logout','POST');TOKEN='';try{localStorage.removeItem('adm_token')}catch(e){}location.reload();};
+document.getElementById('viewSite').onclick=()=>window.open('index.html','_blank');
+
+/* ===== boot ===== */
+async function boot(){
+  const me=await api('/api/me');
+  if(!me.ok){document.getElementById('app').classList.add('hidden');document.getElementById('loginWrap').classList.remove('hidden');return;}
+  document.getElementById('loginWrap').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('who').textContent='خوش آمدید، '+me.username;
+  await loadAll(); go('dash');
+}
+async function loadAll(){
+  [PROPS,POSTS,MSGS,SET]=await Promise.all([api('/api/props'),api('/api/posts'),api('/api/messages').catch(()=>[]),api('/api/settings')]);
+  if(!Array.isArray(MSGS))MSGS=[];
+  const unread=MSGS.filter(m=>!m.readed).length;
+  document.getElementById('msgDot').classList.toggle('hidden',!unread);
+}
+
+/* ===== nav ===== */
+document.querySelectorAll('.nav-it[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
+const TITLES={dash:'داشبورد',props:'مدیریت املاک',posts:'مدیریت بلاگ',msgs:'صندوق پیام‌ها',settings:'تنظیمات سایت',i18n:'ویرایش ترجمه‌ها'};
+function go(v){curView=v;
+  document.querySelectorAll('.nav-it[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  document.getElementById('viewTitle').textContent=TITLES[v];
+  ({dash:vDash,props:vProps,posts:vPosts,msgs:vMsgs,settings:vSettings,i18n:vI18n})[v]();
+}
+
+/* ===== dashboard ===== */
+function vDash(){
+  const sale=PROPS.filter(p=>p.status==='sale').length, rent=PROPS.filter(p=>p.status==='rent').length;
+  const unread=MSGS.filter(m=>!m.readed).length;
+  document.getElementById('view').innerHTML=
+  '<div class="stats">'+
+  '<div class="stat-c"><b>'+PROPS.length+'</b><span>کل املاک</span></div>'+
+  '<div class="stat-c"><b>'+sale+'</b><span>برای فروش</span></div>'+
+  '<div class="stat-c"><b>'+rent+'</b><span>اجاره‌ای</span></div>'+
+  '<div class="stat-c"><b>'+POSTS.length+'</b><span>مقالات بلاگ</span></div>'+
+  '</div>'+
+  '<div class="panel"><h3>آخرین املاک</h3><table><tr><th>تصویر</th><th>عنوان (فا)</th><th>منطقه</th><th>قیمت (فا)</th><th>وضعیت</th></tr>'+
+  PROPS.slice(0,6).map(p=>'<tr><td><img src="'+esc(p.img)+'"></td><td>'+esc(p.t.fa||p.t.en)+'</td><td>'+esc(p.district)+'</td><td>'+esc(p.price.fa||p.price.en)+'</td><td><span class="pill '+p.status+'">'+(p.status==='sale'?'فروش':'اجاره')+'</span></td></tr>').join('')+
+  '</table></div>'+
+  '<div class="panel"><h3>آخرین پیام‌ها '+(unread?'<span class="pill unread">'+unread+' نخوانده</span>':'')+'</h3>'+
+  (MSGS.length?'<table><tr><th>نام</th><th>تماس</th><th>موضوع</th><th>زمان</th></tr>'+MSGS.slice(0,5).map(m=>'<tr><td>'+esc(m.name)+'</td><td dir="ltr">'+esc(m.contact)+'</td><td>'+esc(m.topic)+'</td><td>'+esc(m.created)+'</td></tr>').join('')+'</table>':'<p style="color:var(--muted);font-size:13px">هنوز پیامی ثبت نشده است.</p>')+
+  '</div>';
+}
+
+/* ===== props ===== */
+const DIST=['atakoy','beylikduzu','zekeriyakoy','besiktas','galata','levent'];
+const TYPES=['apt','villa','studio','office'];
+const AMS=['amPool','amGym','amSecurity','amParking','amGarden','amElevator'];
+const IMGS=['images/prop1.jpg','images/prop2.jpg','images/prop3.jpg','images/prop4.jpg','images/prop5.jpg','images/prop6.jpg','images/office.jpg','images/interior1.jpg','images/interior2.jpg','images/hero.jpg','images/city-istanbul.jpg','images/district-atakoy.jpg','images/district-ortakoy.jpg','images/district-galata.jpg'];
+function vProps(){
+  document.getElementById('view').innerHTML=
+  '<div class="panel"><h3 style="display:flex;justify-content:space-between;align-items:center">فهرست املاک <button class="btn-gold" onclick="editProp(null)">+ افزودن ملک</button></h3>'+
+  '<table><tr><th>تصویر</th><th>عنوان (فا)</th><th>منطقه</th><th>نوع</th><th>قیمت عددی</th><th>ترتیب</th><th>وضعیت</th><th></th></tr>'+
+  PROPS.map(p=>'<tr><td><img src="'+esc(p.img)+'"></td><td>'+esc(p.t.fa||p.t.en)+'</td><td>'+esc(p.district)+'</td><td>'+esc(p.type)+'</td><td>'+(p.price_num??'—')+'</td><td>'+p.added+'</td><td><span class="pill '+p.status+'">'+(p.status==='sale'?'فروش':'اجاره')+'</span></td>'+
+  '<td><button class="btn-ghost" onclick="editProp(\''+p.id+'\')">ویرایش</button> <button class="btn-red" onclick="delProp(\''+p.id+'\')">حذف</button></td></tr>').join('')+
+  '</table></div>';
+}
+let ED=null, ED_LANG='fa';
+window.editProp=function(id){
+  ED=id?JSON.parse(JSON.stringify(PROPS.find(x=>x.id===id))):{id:'',status:'sale',district:'atakoy',type:'apt',price_num:null,added:PROPS.length+1,img:'images/prop1.jpg',rating:4.5,year:2026,floor:'',floors:null,view:'city',dist:{sea:'',center:'',airport:''},ams:[],t:{},loc:{},price:{},s1:{},s2:{},s3:{},d:{},gal:['images/prop1.jpg']};
+  ED_LANG='fa'; renderPropModal();
+};
+window.delProp=async function(id){
+  if(!confirm('این ملک حذف شود؟'))return;
+  await api('/api/props/'+id,'DELETE'); await loadAll(); vProps(); toast('ملک حذف شد');
+};
+function fld(lang){const g=k=>esc((ED[k]||{})[lang]||'');
+  return '<div class="grid2">'+
+  '<div class="f"><label>عنوان</label><input data-k="t" value="'+g('t')+'"></div>'+
+  '<div class="f"><label>موقعیت</label><input data-k="loc" value="'+g('loc')+'"></div>'+
+  '<div class="f"><label>قیمت (متنی)</label><input data-k="price" value="'+g('price')+'"></div>'+
+  '<div class="f"><label>مشخصه ۱</label><input data-k="s1" value="'+g('s1')+'"></div>'+
+  '<div class="f"><label>مشخصه ۲</label><input data-k="s2" value="'+g('s2')+'"></div>'+
+  '<div class="f"><label>مشخصه ۳</label><input data-k="s3" value="'+g('s3')+'"></div>'+
+  '</div><div class="f" style="margin-top:12px"><label>توضیحات</label><textarea data-k="d">'+g('d')+'</textarea></div>';
+}
+function renderPropModal(){
+  const m=document.getElementById('modalBox');
+  m.innerHTML='<h3>'+(ED.id?'ویرایش ملک: '+esc(ED.t.fa||ED.id):'افزودن ملک جدید')+'<button class="btn-red" onclick="closeModal()">✕ بستن</button></h3>'+
+  '<div class="grid3">'+
+  '<div class="f"><label>شناسه (انگلیسی)</label><input id="e_id" value="'+esc(ED.id)+'" '+(ED.id?'disabled':'')+'></div>'+
+  '<div class="f"><label>وضعیت</label><select id="e_status"><option value="sale" '+(ED.status==='sale'?'selected':'')+'>فروش</option><option value="rent" '+(ED.status==='rent'?'selected':'')+'>اجاره</option></select></div>'+
+  '<div class="f"><label>منطقه</label><select id="e_district">'+DIST.map(d=>'<option value="'+d+'" '+(ED.district===d?'selected':'')+'>'+d+'</option>').join('')+'</select></div>'+
+  '<div class="f"><label>نوع</label><select id="e_type">'+TYPES.map(d=>'<option value="'+d+'" '+(ED.type===d?'selected':'')+'>'+d+'</option>').join('')+'</select></div>'+
+  '<div class="f"><label>قیمت عددی (USD)</label><input id="e_price_num" type="number" value="'+(ED.price_num??'')+'"></div>'+
+  '<div class="f"><label>ترتیب جدیدترین</label><input id="e_added" type="number" value="'+ED.added+'"></div>'+
+  '<div class="f"><label>سال ساخت</label><input id="e_year" type="number" value="'+(ED.year??'')+'"></div>'+
+  '<div class="f"><label>طبقه</label><input id="e_floor" value="'+esc(ED.floor)+'"></div>'+
+  '<div class="f"><label>تعداد طبقات</label><input id="e_floors" type="number" value="'+(ED.floors??'')+'"></div>'+
+  '<div class="f"><label>ویو</label><select id="e_view">'+['sea','bay','city','forest'].map(d=>'<option value="'+d+'" '+(ED.view===d?'selected':'')+'>'+d+'</option>').join('')+'</select></div>'+
+  '<div class="f"><label>تصویر اصلی</label><select id="e_img">'+IMGS.map(d=>'<option value="'+d+'" '+(ED.img===d?'selected':'')+'>'+d+'</option>').join('')+'</select></div>'+
+  '<div class="f"><label>امتیاز</label><input id="e_rating" type="number" step="0.1" value="'+ED.rating+'"></div>'+
+  '</div>'+
+  '<div class="grid3" style="margin-top:12px">'+
+  '<div class="f"><label>فاصله تا دریا</label><input id="e_sea" value="'+esc(ED.dist.sea)+'"></div>'+
+  '<div class="f"><label>تا مرکز شهر</label><input id="e_center" value="'+esc(ED.dist.center)+'"></div>'+
+  '<div class="f"><label>تا فرودگاه</label><input id="e_airport" value="'+esc(ED.dist.airport)+'"></div>'+
+  '</div>'+
+  '<div class="f" style="margin-top:12px"><label>امکانات</label><div style="display:flex;gap:8px;flex-wrap:wrap">'+AMS.map(a=>'<label class="chk"><input type="checkbox" value="'+a+'" '+(ED.ams.includes(a)?'checked':'')+'>'+a.replace('am','')+'</label>').join('')+'</div></div>'+
+  '<div class="f" style="margin-top:12px"><label>گالری (هر خط یک تصویر)</label><textarea id="e_gal">'+esc((ED.gal||[]).join('\n'))+'</textarea></div>'+
+  '<div class="langtabs">'+LANGS.map(l=>'<button data-l="'+l+'" class="'+(l===ED_LANG?'on':'')+'">'+LBL[l]+'</button>').join('')+'</div>'+
+  '<div id="langFields">'+fld(ED_LANG)+'</div>'+
+  '<div class="m-actions"><button class="btn-ghost" onclick="closeModal()">انصراف</button><button class="btn-gold" onclick="saveProp()">ذخیره ملک</button></div>';
+  m.querySelectorAll('.langtabs button').forEach(b=>b.onclick=()=>{collectLang();ED_LANG=b.dataset.l;m.querySelectorAll('.langtabs button').forEach(x=>x.classList.toggle('on',x===b));document.getElementById('langFields').innerHTML=fld(ED_LANG);bindLang();});
+  bindLang();
+  document.getElementById('modalWrap').classList.remove('hidden');
+}
+function bindLang(){
+  document.querySelectorAll('#langFields [data-k]').forEach(inp=>{
+    inp.oninput=()=>{const k=inp.dataset.k;ED[k]=ED[k]||{};ED[k][ED_LANG]=inp.value;};
+  });
+}
+function collectLang(){/* values already bound via oninput */}
+window.closeModal=function(){document.getElementById('modalWrap').classList.add('hidden');};
+window.saveProp=async function(){
+  const newId=document.getElementById('e_id').value.trim();
+  const existed=PROPS.some(x=>x.id===ED.id);
+  if(!existed) ED.id=newId||('p'+Date.now());
+  ED.status=e_status.value;ED.district=e_district.value;ED.type=e_type.value;
+  ED.price_num=e_price_num.value?+e_price_num.value:null;ED.added=+e_added.value||0;
+  ED.year=e_year.value?+e_year.value:null;ED.floor=e_floor.value;ED.floors=e_floors.value?+e_floors.value:null;
+  ED.view=e_view.value;ED.img=e_img.value;ED.rating=+e_rating.value||4.5;
+  ED.dist={sea:e_sea.value,center:e_center.value,airport:e_airport.value};
+  ED.ams=[...document.querySelectorAll('#modalBox .chk input:checked')].map(i=>i.value);
+  ED.gal=e_gal.value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(existed) await api('/api/props/'+ED.id,'PUT',ED); else await api('/api/props','POST',ED);
+  await loadAll(); closeModal(); vProps(); toast('ملک ذخیره شد ✅');
+};
+
+/* ===== posts (stub for now) ===== */
+function vPosts(){document.getElementById('view').innerHTML='<div class="panel"><h3>مقالات</h3><table><tr><th>تصویر</th><th>عنوان (فا)</th><th>تاریخ</th></tr>'+POSTS.map(p=>'<tr><td><img src="images/'+esc(p.img)+'"></td><td>'+esc(p.c.fa.title)+'</td><td>'+esc(p.date)+'</td></tr>').join('')+'</table><p style="color:var(--muted);font-size:12.5px;margin-top:12px">ویرایشگر کامل مقالات در گام بعدی فعال می‌شود.</p></div>';}
+function vMsgs(){document.getElementById('view').innerHTML='<div class="panel"><h3>پیام‌ها</h3>'+(MSGS.length?'<table><tr><th>نام</th><th>تماس</th><th>موضوع</th><th>پیام</th><th>زمان</th><th></th></tr>'+MSGS.map(m=>'<tr><td>'+esc(m.name)+'</td><td dir="ltr">'+esc(m.contact)+'</td><td>'+esc(m.topic)+'</td><td>'+esc(m.msg)+'</td><td>'+esc(m.created)+'</td><td>'+(m.readed?'':'<button class="btn-ghost" onclick="markRead('+m.id+')">خواندم</button>')+' <button class="btn-red" onclick="delMsg('+m.id+')">حذف</button></td></tr>').join('')+'</table>':'<p style="color:var(--muted);font-size:13px">پیامی نیست.</p>')+'</div>';}
+window.markRead=async(id)=>{await api('/api/messages/'+id,'PUT',{read:1});await loadAll();vMsgs();};
+window.delMsg=async(id)=>{if(!confirm('حذف پیام؟'))return;await api('/api/messages/'+id,'DELETE');await loadAll();vMsgs();toast('پیام حذف شد');};
+function vSettings(){document.getElementById('view').innerHTML='<div class="panel"><h3>تنظیمات</h3><p style="color:var(--muted);font-size:13px">ویرایشگر تنظیمات در گام بعدی فعال می‌شود.</p></div>';}
+function vI18n(){document.getElementById('view').innerHTML='<div class="panel"><h3>ترجمه‌ها</h3><p style="color:var(--muted);font-size:13px">ویرایشگر ترجمه در گام بعدی فعال می‌شود.</p></div>';}
+
+boot();
+</script>
+</body>
+</html>
